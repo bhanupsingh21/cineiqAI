@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "CinemAI — AI Cinematic Video Creation Platform",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build",
