@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workspace | CineIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.min.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/workspace.css" />
+</head>
+<body class="workspace-body">
+
+  <!-- TOP NAV BAR -->
+  <header class="ws-header">
+    <div class="ws-header-left">
+      <a href="/" class="ws-logo">
+        <img src="/cineiq.png" alt="CineIQ" style="height:28px;width:auto;display:block;" />
+      </a>
+      <div class="ws-project-name">
+        <span>Untitled Project</span>
+        <i data-lucide="edit-2" class="icon-sm text-muted"></i>
+      </div>
+    </div>
+
+    <div class="ws-header-center">
+      <div class="pipeline-status" id="pipeline-status-badge">
+        <div class="status-indicator idle" id="pipeline-dot"></div>
+        <span id="pipeline-status-text">AI Pipeline Idle</span>
+      </div>
+    </div>
+
+    <div class="ws-header-right">
+      <div class="avatars-group">
+        <img src="https://i.pravatar.cc/150?u=1" class="avatar" alt="User" />
+        <img src="https://i.pravatar.cc/150?u=2" class="avatar" alt="User" />
+      </div>
+      <div class="ws-autosave"><i data-lucide="cloud"></i>&nbsp;Saved</div>
+      <button class="btn btn-ghost btn-sm"><i data-lucide="cpu"></i>&nbsp;Render</button>
+      <button class="btn btn-primary btn-sm"><i data-lucide="download"></i>&nbsp;Export</button>
+      <img src="https://i.pravatar.cc/150?u=me" class="avatar" alt="Me" style="margin-left:4px;" />
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE LAYOUT -->
+  <main class="ws-layout">
+
+    <!-- LEFT SIDEBAR: AI Control Panel -->
+    <aside class="ws-sidebar-left">
+      <div class="sidebar-section">
+        <button class="btn btn-primary ws-full-btn">
+          <i data-lucide="clapperboard"></i>&nbsp;New Project
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-label">RECENT PROMPTS</div>
+        <div class="prompt-history">
+          <div class="history-item">
+            <span class="history-text">A dark emotional trailer about a lost...</span>
+            <span class="history-time">2m ago</span>
+          </div>
+          <div class="history-item">
+            <span class="history-text">Cyberpunk neon Tokyo chase scene...</span>
+            <span class="history-time">1h ago</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-label">AI CREW</div>
+        <div class="agents-list" id="ws-agents-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-label">STORY SETTINGS</div>
+        <div class="control-group">
+          <label>Genre</label>
+          <select class="ws-select"><option>Sci-Fi</option><option>Thriller</option><option>Drama</option><option>Horror</option></select>
+        </div>
+        <div class="control-group">
+          <label>Tone</label>
+          <select class="ws-select"><option>Dark</option><option>Hopeful</option><option>Intense</option><option>Melancholic</option></select>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER CANVAS: Creation Studio -->
+    <section class="ws-canvas">
+
+      <!-- Prompt Studio -->
+      <div class="prompt-studio">
+
+        <!-- Content type tabs -->
+        <div class="prompt-type-tabs">
+          <button class="prompt-type-tab active" data-type="music-video">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            Music Video
+          </button>
+          <button class="prompt-type-tab" data-type="youtube">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            YouTube Pilot
+          </button>
+          <button class="prompt-type-tab" data-type="long-form">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            Long-form Show
+          </button>
+          <button class="prompt-type-tab" data-type="feature">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Feature Film
+          </button>
+        </div>
+
+        <!-- Main input box -->
+        <div class="prompt-inner">
+          <div class="prompt-textarea-wrap">
+            <textarea id="ws-prompt-input" rows="5" placeholder="Describe your video... e.g. A dark emotional trailer about a lost astronaut surviving on Mars, dramatic orchestral score, 60 seconds."></textarea>
+          </div>
+
+          <div class="prompt-bottom-bar">
+            <div class="prompt-bottom-left">
+              <button class="prompt-round-btn" title="Attach file">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              </button>
+              <button class="prompt-round-btn" title="Insert table">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+              </button>
+              <button class="prompt-project-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="project-dollar"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                CineIQ Phase 3
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <select class="prompt-aspect-select" id="aspect-ratio-select" title="Aspect Ratio">
+                <option value="16:9" selected>⬜ 16:9</option>
+                <option value="9:16">▭ 9:16</option>
+                <option value="21:9">▬ 21:9</option>
+                <option value="1:1">■ 1:1</option>
+              </select>
+              <button class="fix-prompt-btn" id="fix-prompt-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M5 18l.75 2.25L8 21l-2.25.75L5 24l-.75-2.25L2 21l2.25-.75z"/></svg>
+                Fix Prompt
+              </button>
+            </div>
+
+            <div class="prompt-bottom-right">
+              <button class="prompt-round-btn" title="Adjust settings">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><circle cx="12" cy="4" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="14" cy="20" r="2"/></svg>
+              </button>
+              <button class="prompt-round-btn" id="mic-btn" title="Voice input">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              </button>
+              <button class="prompt-generate-btn" id="ws-generate-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M5 18l.75 2.25L8 21l-2.25.75L5 24l-.75-2.25L2 21l2.25-.75z"/></svg>
+                Generate
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- AI Generation Pipeline (shown on Generate) -->
+      <div class="ai-pipeline" id="ai-pipeline" style="display:none;">
+        <div class="section-label" style="margin-bottom:16px;">AI PRODUCTION PIPELINE</div>
+        <div class="pipeline-stages" id="pipeline-stages">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Live Preview Player -->
+      <div class="preview-player-container" id="preview-player-container" data-ratio="16:9">
+        <div class="ambient-glow"></div>
+        <div class="preview-player" id="preview-player">
+          <div class="player-placeholder" id="player-placeholder">
+            <!-- Canvas: random pixel generation effect -->
+            <canvas class="pp-canvas" id="pp-canvas"></canvas>
+            <!-- Ambient glow blobs -->
+            <div class="pp-blob pp-blob-1"></div>
+            <div class="pp-blob pp-blob-2"></div>
+            <!-- Cinematic corner brackets -->
+            <div class="pp-corner pp-tl"></div>
+            <div class="pp-corner pp-tr"></div>
+            <div class="pp-corner pp-bl"></div>
+            <div class="pp-corner pp-br"></div>
+            <!-- Bottom HUD (visible while generating) -->
+            <div class="pp-hud" id="pp-hud">
+              <span class="pp-hud-left">FRAME <span id="pp-frame-count">0000</span> / 2160</span>
+              <span class="pp-hud-badge">● GENERATING</span>
+              <span class="pp-hud-right" id="pp-hud-right">4K · 16:9 · 24fps</span>
+            </div>
+            <!-- Center UI -->
+            <div class="pp-center">
+              <div class="pp-icon-ring" id="pp-icon-ring">
+                <i data-lucide="film" style="width:22px;height:22px;"></i>
+              </div>
+              <p class="pp-idle-text" id="pp-idle-text">Ready for your vision</p>
+              <div class="pp-gen-ui" id="pp-gen-ui">
+                <div class="pp-gen-dots"><span></span><span></span><span></span></div>
+                <p class="pp-gen-label" id="pp-gen-label">Analyzing prompt...</p>
+                <div class="pp-gen-bar-track">
+                  <div class="pp-gen-bar-fill" id="pp-gen-bar-fill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <video
+            src="/Video/Demo.mp4"
+            class="player-video hidden"
+            id="player-video"
+            playsinline
+            loop
+            muted
+          ></video>
+
+          <div class="player-controls">
+            <div class="scrubber-bar">
+              <div class="scrubber-fill" style="width: 30%"></div>
+            </div>
+            <div class="controls-bar">
+              <div class="flex-row gap-2">
+                <button class="icon-btn"><i data-lucide="skip-back"></i></button>
+                <button class="icon-btn" style="color:white;"><i data-lucide="play"></i></button>
+                <button class="icon-btn"><i data-lucide="skip-forward"></i></button>
+                <button class="icon-btn"><i data-lucide="volume-2"></i></button>
+              </div>
+              <div class="scene-counter">Scene 3 of 8 &nbsp;·&nbsp; 0:15 / 1:00</div>
+              <div class="flex-row gap-2">
+                <span class="res-badge">4K</span>
+                <button class="icon-btn"><i data-lucide="refresh-cw"></i></button>
+                <button class="icon-btn"><i data-lucide="maximize"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene Thumbnails -->
+      <div class="scene-thumbnails" id="scene-thumbnails">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Timeline Editor -->
+      <div class="timeline-editor">
+        <div class="timeline-header">
+          <div class="timeline-tools">
+            <button class="icon-btn" title="Zoom out"><i data-lucide="zoom-out"></i></button>
+            <button class="icon-btn" title="Zoom in"><i data-lucide="zoom-in"></i></button>
+            <button class="icon-btn" title="Snap to grid"><i data-lucide="magnet"></i></button>
+          </div>
+          <div class="time-ruler"></div>
+          <button class="btn btn-ghost btn-sm text-glow"><i data-lucide="sparkles"></i>&nbsp;AI Assist</button>
+        </div>
+
+        <div class="timeline-tracks">
+          <div class="track">
+            <div class="track-label"><i data-lucide="video" style="width:14px;height:14px;"></i> Video</div>
+            <div class="track-content">
+              <div class="clip clip-video" style="width:20%;left:0%;">Scene 1</div>
+              <div class="clip clip-video" style="width:30%;left:20%;">Scene 2</div>
+              <div class="clip clip-video" style="width:25%;left:50%;">Scene 3</div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label"><i data-lucide="mic" style="width:14px;height:14px;"></i> Voice</div>
+            <div class="track-content">
+              <div class="clip clip-voice" style="width:40%;left:5%;">VO Segment 1</div>
+              <div class="clip clip-voice" style="width:30%;left:55%;">VO Segment 2</div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label"><i data-lucide="music" style="width:14px;height:14px;"></i> Music</div>
+            <div class="track-content">
+              <div class="clip clip-music" style="width:80%;left:0%;">Ambient Rise — Orchestra</div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="track-label"><i data-lucide="speaker" style="width:14px;height:14px;"></i> SFX</div>
+            <div class="track-content">
+              <div class="clip clip-sfx" style="width:5%;left:19%;">Impact</div>
+              <div class="clip clip-sfx" style="width:15%;left:45%;">Wind</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT SIDEBAR: Properties & AI Assist -->
+    <aside class="ws-sidebar-right">
+      <div class="properties-panel">
+        <div class="section-label">SCENE PROPERTIES</div>
+
+        <div class="prop-group">
+          <label>Camera Style</label>
+          <select class="ws-select"><option>Handheld</option><option>Steadicam</option><option>Drone Aerial</option><option>Dolly Push-In</option></select>
+        </div>
+
+        <div class="prop-group">
+          <label>Lighting</label>
+          <select class="ws-select"><option>Low-key Noir</option><option>Golden Hour</option><option>Neon Cyberpunk</option><option>Overcast Flat</option></select>
+        </div>
+
+        <hr class="ws-divider" />
+
+        <div class="char-section-header-row">
+          <div class="section-label" style="margin:0;">CHARACTER IN SCENE</div>
+          <div class="char-scene-count-badge" id="char-scene-count-badge">0 / 5</div>
+        </div>
+        <div id="char-section">
+          <!-- Populated by JS -->
+        </div>
+        <button class="btn btn-ghost ws-full-btn char-add-btn" id="char-add-btn">
+          <i data-lucide="user-plus"></i>&nbsp;Add Character
+        </button>
+
+        <hr class="ws-divider" />
+
+        <!-- WORLD SCENE SECTION -->
+        <div class="char-section-header-row">
+          <div class="section-label" style="margin:0;">WORLD SCENE</div>
+          <div class="scene-count-badge" id="scene-count-badge">0 / 5</div>
+        </div>
+        <div id="world-scene-section">
+          <!-- Populated by JS -->
+        </div>
+        <button class="btn btn-ghost ws-full-btn scene-add-btn" id="scene-add-btn">
+          <i data-lucide="map-pin"></i>&nbsp;Add Scene
+        </button>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CHARACTER CREATION MODAL
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="char-modal-overlay" id="char-modal-overlay">
+    <div class="char-modal" id="char-modal" role="dialog" aria-modal="true">
+
+      <!-- Modal Header -->
+      <div class="char-modal-header" id="char-modal-header">
+        <!-- Back button (hidden on main grid) -->
+        <button class="char-modal-back hidden" id="char-modal-back">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div>
+          <div class="char-modal-title" id="char-modal-title">Create Your Character</div>
+          <div class="char-modal-sub" id="char-modal-sub">Generate cinematic characters for your scenes using AI.</div>
+        </div>
+        <div class="char-modal-actions">
+          <button class="icon-btn" title="Recently used"><i data-lucide="clock"></i></button>
+          <button class="icon-btn" title="Help"><i data-lucide="help-circle"></i></button>
+          <button class="icon-btn char-modal-close" id="char-modal-close" title="Close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="char-modal-body">
+
+        <!-- ── MAIN GRID (default view) ── -->
+        <div class="char-option-grid" id="char-option-grid">
+          <div class="char-option-card" data-view="image"
+               style="--card-bg:url('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="image"></i></div>
+              <div class="char-option-heading">Start From Image</div>
+              <div class="char-option-desc">Upload a face, photo, or reference image to create a cinematic AI character.</div>
+            </div>
+          </div>
+          <div class="char-option-card" data-view="prompt"
+               style="--card-bg:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="type"></i></div>
+              <div class="char-option-heading">Describe Your Character</div>
+              <div class="char-option-desc">Write your character description and AI will generate cinematic variations.</div>
+            </div>
+          </div>
+          <div class="char-option-card" data-view="builder"
+               style="--card-bg:url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="sliders"></i></div>
+              <div class="char-option-heading">Build Your Own</div>
+              <div class="char-option-desc">Customize every detail of your cinematic character manually.</div>
+            </div>
+          </div>
+          <div class="char-option-card" data-view="library"
+               style="--card-bg:url('https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="users"></i></div>
+              <div class="char-option-heading">Existing Characters</div>
+              <div class="char-option-desc">Use your saved cinematic characters across multiple scenes and projects.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VIEW A: IMAGE CHARACTER BUILDER ── -->
+        <div class="char-view hidden" id="char-view-image">
+          <div class="char-view-3col">
+            <!-- Left: Upload -->
+            <div class="char-view-col char-upload-col">
+              <div class="section-label">REFERENCE IMAGES</div>
+              <div class="char-upload-zone" id="char-upload-zone">
+                <input type="file" id="char-file-input" accept="image/*" multiple class="hidden" />
+                <i data-lucide="upload-cloud" style="width:32px;height:32px;opacity:0.4;"></i>
+                <p>Drag &amp; drop images here</p>
+                <span>or</span>
+                <button class="btn btn-ghost btn-sm" id="char-upload-browse">Browse Files</button>
+              </div>
+              <div class="char-upload-grid" id="char-upload-grid"></div>
+              <div class="section-label" style="margin-top:16px;">DETECTION</div>
+              <div class="char-detect-tags">
+                <span class="char-detect-tag active"><i data-lucide="scan-face"></i> Face Detected</span>
+                <span class="char-detect-tag"><i data-lucide="person-standing"></i> Pose Extraction</span>
+                <span class="char-detect-tag"><i data-lucide="sparkles"></i> Style Analysis</span>
+              </div>
+            </div>
+            <!-- Center: Preview -->
+            <div class="char-view-col char-preview-col">
+              <div class="section-label">AI PREVIEW</div>
+              <div class="char-ai-preview">
+                <div class="char-shimmer"></div>
+                <div class="char-preview-badge">● GENERATING</div>
+              </div>
+              <div class="char-preview-modes">
+                <button class="char-mode-btn active">Portrait</button>
+                <button class="char-mode-btn">Full Body</button>
+                <button class="char-mode-btn">Scene</button>
+              </div>
+            </div>
+            <!-- Right: Controls -->
+            <div class="char-view-col char-controls-col">
+              <div class="section-label">CUSTOMIZATION</div>
+              <div class="char-control-field">
+                <label>Age Range</label>
+                <select class="ws-select"><option>Young Adult (20–30)</option><option>Adult (30–45)</option><option>Middle-aged (45–60)</option><option>Elder (60+)</option></select>
+              </div>
+              <div class="char-control-field">
+                <label>Gender Presentation</label>
+                <select class="ws-select"><option>Masculine</option><option>Feminine</option><option>Androgynous</option></select>
+              </div>
+              <div class="char-control-field">
+                <label>Art Style</label>
+                <select class="ws-select"><option>Photorealistic</option><option>Cinematic</option><option>Stylized</option><option>Anime</option><option>Graphic Novel</option></select>
+              </div>
+              <div class="char-control-field">
+                <label>Expression</label>
+                <select class="ws-select"><option>Neutral</option><option>Determined</option><option>Mysterious</option><option>Warm</option><option>Intense</option></select>
+              </div>
+              <div class="char-control-field">
+                <label>Consistency Strength</label>
+                <input type="range" class="char-slider" min="0" max="100" value="80" />
+                <div class="char-slider-labels"><span>Flexible</span><span>Strict</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="char-view-footer">
+            <button class="btn btn-ghost"><i data-lucide="rotate-ccw"></i>&nbsp;Reset</button>
+            <div style="display:flex;gap:12px;">
+              <button class="btn btn-ghost"><i data-lucide="save"></i>&nbsp;Save Character</button>
+              <button class="btn btn-primary"><i data-lucide="sparkles"></i>&nbsp;Generate Character</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VIEW B: AI PROMPT STUDIO ── -->
+        <div class="char-view hidden" id="char-view-prompt">
+          <div class="char-view-2col">
+            <!-- Left: Prompt + sections -->
+            <div class="char-view-col">
+              <div class="section-label">CHARACTER DESCRIPTION</div>
+              <textarea class="char-prompt-textarea" placeholder="Describe your character... e.g. A rugged middle-aged detective with a scar, deep-set eyes, and a weathered leather jacket. Carries a quiet intensity."></textarea>
+              <div class="char-prompt-examples">
+                <span class="assist-chip" data-prompt="A rugged middle-aged detective with a scar and deep voice.">Detective</span>
+                <span class="assist-chip" data-prompt="A futuristic cyberpunk girl with neon glasses and silver hair.">Cyberpunk</span>
+                <span class="assist-chip" data-prompt="A wise elder sage with kind eyes and flowing robes.">Sage</span>
+                <span class="assist-chip" data-prompt="A fierce warrior queen with battle scars and commanding presence.">Warrior</span>
+              </div>
+
+              <div class="char-sections">
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="eye"></i><span>Appearance</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-two-fields">
+                      <div class="char-control-field"><label>Hair Color</label><select class="ws-select"><option>Dark Brown</option><option>Black</option><option>Blonde</option><option>Silver</option><option>Red</option></select></div>
+                      <div class="char-control-field"><label>Eye Color</label><select class="ws-select"><option>Brown</option><option>Green</option><option>Blue</option><option>Amber</option><option>Grey</option></select></div>
+                    </div>
+                    <div class="char-control-field"><label>Build</label><select class="ws-select"><option>Athletic</option><option>Slender</option><option>Stocky</option><option>Lean</option></select></div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="brain"></i><span>Personality</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-control-field"><label>Archetype</label><select class="ws-select"><option>The Hero</option><option>The Rebel</option><option>The Sage</option><option>The Explorer</option><option>The Villain</option></select></div>
+                    <div class="char-control-field"><label>Dominant Trait</label><select class="ws-select"><option>Determined</option><option>Mysterious</option><option>Compassionate</option><option>Ruthless</option><option>Curious</option></select></div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="shirt"></i><span>Clothing</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-control-field"><label>Style Era</label><select class="ws-select"><option>Contemporary</option><option>Futuristic</option><option>Period — 1920s</option><option>Period — 1980s</option><option>Fantasy</option></select></div>
+                    <div class="char-control-field"><label>Outfit Preset</label><select class="ws-select"><option>Business Formal</option><option>Street Casual</option><option>Military Tactical</option><option>Royal Court</option><option>Tech-wear</option></select></div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="mic"></i><span>Voice</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-control-field"><label>Voice Preset</label><select class="ws-select"><option>Deep Baritone</option><option>Warm Tenor</option><option>Crisp Soprano</option><option>Raspy Alto</option><option>Neutral</option></select></div>
+                    <div class="char-control-field"><label>Accent</label><select class="ws-select"><option>American Neutral</option><option>British RP</option><option>Southern US</option><option>French</option><option>Irish</option></select></div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="smile"></i><span>Emotion</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-emotion-presets">
+                      <button class="char-emotion-btn active">😐 Neutral</button>
+                      <button class="char-emotion-btn">😤 Determined</button>
+                      <button class="char-emotion-btn">😰 Fearful</button>
+                      <button class="char-emotion-btn">😠 Angry</button>
+                      <button class="char-emotion-btn">😊 Warm</button>
+                      <button class="char-emotion-btn">🎭 Intense</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="film"></i><span>Cinematic Style</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-control-field"><label>Visual Style</label><select class="ws-select"><option>Noir</option><option>Blockbuster</option><option>Indie Drama</option><option>Sci-Fi Epic</option><option>Fantasy</option></select></div>
+                    <div class="char-control-field"><label>Lighting Mood</label><select class="ws-select"><option>Low-key Dramatic</option><option>Golden Hour</option><option>Cold Blue</option><option>Neon City</option></select></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Sliders -->
+              <div class="char-ai-sliders">
+                <div class="char-slider-row">
+                  <span>Creativity</span>
+                  <input type="range" class="char-slider" min="0" max="100" value="65" />
+                  <span class="char-slider-val">65</span>
+                </div>
+                <div class="char-slider-row">
+                  <span>Realism</span>
+                  <input type="range" class="char-slider" min="0" max="100" value="80" />
+                  <span class="char-slider-val">80</span>
+                </div>
+                <div class="char-slider-row">
+                  <span>Consistency</span>
+                  <input type="range" class="char-slider" min="0" max="100" value="90" />
+                  <span class="char-slider-val">90</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Live Preview -->
+            <div class="char-view-col char-preview-col">
+              <div class="section-label">LIVE PREVIEW</div>
+              <div class="char-ai-preview char-ai-preview-tall">
+                <div class="char-shimmer"></div>
+                <div class="char-preview-badge">● READY</div>
+              </div>
+              <div class="char-variation-strip">
+                <div class="char-variation active"></div>
+                <div class="char-variation"></div>
+                <div class="char-variation"></div>
+                <div class="char-variation"></div>
+              </div>
+              <div class="char-view-footer" style="margin-top:auto;padding-top:16px;">
+                <button class="btn btn-ghost"><i data-lucide="save"></i>&nbsp;Save</button>
+                <button class="btn btn-primary" style="width:100%;"><i data-lucide="sparkles"></i>&nbsp;Generate Variations</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VIEW C: CHARACTER BUILDER STUDIO ── -->
+        <div class="char-view hidden" id="char-view-builder">
+          <div class="char-view-3col">
+            <!-- Left: Category List -->
+            <div class="char-view-col char-builder-cats">
+              <div class="section-label">CUSTOMIZE</div>
+              <div class="char-cat-list">
+                <div class="char-cat-item active" data-cat="face"><i data-lucide="scan-face"></i><span>Face</span></div>
+                <div class="char-cat-item" data-cat="hair"><i data-lucide="wind"></i><span>Hair</span></div>
+                <div class="char-cat-item" data-cat="skin"><i data-lucide="droplet"></i><span>Skin</span></div>
+                <div class="char-cat-item" data-cat="outfit"><i data-lucide="shirt"></i><span>Outfit</span></div>
+                <div class="char-cat-item" data-cat="accessories"><i data-lucide="glasses"></i><span>Accessories</span></div>
+                <div class="char-cat-item" data-cat="expressions"><i data-lucide="smile"></i><span>Expressions</span></div>
+              </div>
+              <div class="section-label" style="margin-top:20px;">ENVIRONMENT</div>
+              <div class="char-env-list">
+                <div class="char-env-btn active">Studio</div>
+                <div class="char-env-btn">Outdoor</div>
+                <div class="char-env-btn">Cyberpunk</div>
+                <div class="char-env-btn">Sunset</div>
+              </div>
+            </div>
+
+            <!-- Center: Preview -->
+            <div class="char-view-col char-preview-col">
+              <div class="char-preview-modes" style="margin-bottom:12px;">
+                <button class="char-mode-btn active">Portrait</button>
+                <button class="char-mode-btn">Full Body</button>
+                <button class="char-mode-btn">Scene</button>
+              </div>
+              <div class="char-ai-preview char-ai-preview-builder">
+                <div class="char-shimmer"></div>
+              </div>
+            </div>
+
+            <!-- Right: Attribute Controls -->
+            <div class="char-view-col char-attr-col" id="char-attr-panel">
+              <div class="section-label">FACE SCULPTING</div>
+              <div class="char-attr-list">
+                <div class="char-attr-row"><span>Eye Spacing</span><input type="range" class="char-slider" min="0" max="100" value="50"/></div>
+                <div class="char-attr-row"><span>Jawline</span><input type="range" class="char-slider" min="0" max="100" value="45"/></div>
+                <div class="char-attr-row"><span>Nose Width</span><input type="range" class="char-slider" min="0" max="100" value="50"/></div>
+                <div class="char-attr-row"><span>Cheekbones</span><input type="range" class="char-slider" min="0" max="100" value="60"/></div>
+                <div class="char-attr-row"><span>Brow Height</span><input type="range" class="char-slider" min="0" max="100" value="55"/></div>
+                <div class="char-attr-row"><span>Lip Fullness</span><input type="range" class="char-slider" min="0" max="100" value="40"/></div>
+              </div>
+              <div class="section-label" style="margin-top:16px;">SKIN</div>
+              <div class="char-skin-tones">
+                <div class="char-skin-btn active" style="background:#f8d5b4;"></div>
+                <div class="char-skin-btn" style="background:#d4a77a;"></div>
+                <div class="char-skin-btn" style="background:#a0694a;"></div>
+                <div class="char-skin-btn" style="background:#7a4030;"></div>
+                <div class="char-skin-btn" style="background:#3d1f14;"></div>
+              </div>
+              <div class="char-attr-row" style="margin-top:12px;"><span>Texture</span><input type="range" class="char-slider" min="0" max="100" value="70"/></div>
+            </div>
+          </div>
+          <div class="char-view-footer">
+            <button class="btn btn-ghost"><i data-lucide="rotate-ccw"></i>&nbsp;Reset All</button>
+            <div style="display:flex;gap:12px;">
+              <button class="btn btn-ghost"><i data-lucide="copy"></i>&nbsp;Duplicate</button>
+              <button class="btn btn-primary"><i data-lucide="save"></i>&nbsp;Save Character</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VIEW D: CHARACTER LIBRARY ── -->
+        <div class="char-view hidden" id="char-view-library" style="position:relative;">
+          <div class="char-library-toolbar">
+            <div class="char-library-search-wrap">
+              <i data-lucide="search" style="width:14px;height:14px;color:var(--ag-text-muted);"></i>
+              <input type="text" class="ws-input" id="char-lib-search" placeholder="Search characters..." style="background:transparent;border:none;padding:0;font-size:13px;" />
+            </div>
+            <div class="char-lib-filters">
+              <button class="char-lib-filter active" data-filter="all">All</button>
+              <button class="char-lib-filter" data-filter="recent">Recent</button>
+              <button class="char-lib-filter" data-filter="shared">Shared</button>
+            </div>
+          </div>
+          <div class="char-lib-grid" id="char-lib-grid">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Role Assignment Overlay (shown after selecting a character) -->
+          <div class="char-role-overlay hidden" id="char-role-overlay">
+            <div class="char-role-card">
+              <div class="char-role-card-header">
+                <div class="char-role-selected-char" id="char-role-selected-char">
+                  <!-- Populated by JS: image + name -->
+                </div>
+                <div class="char-role-arrow">
+                  <i data-lucide="arrow-right"></i>
+                </div>
+                <div class="char-role-right">
+                  <div class="char-role-label">Playing the script character</div>
+                  <input type="text" class="ws-input char-role-input" id="char-role-input" placeholder="e.g. The Detective, Main Villain, Hero..." />
+                  <div class="char-role-chips" id="char-role-chips">
+                    <button class="char-role-chip" data-role="The Protagonist">The Protagonist</button>
+                    <button class="char-role-chip" data-role="The Antagonist">The Antagonist</button>
+                    <button class="char-role-chip" data-role="The Mentor">The Mentor</button>
+                    <button class="char-role-chip" data-role="The Sidekick">The Sidekick</button>
+                    <button class="char-role-chip" data-role="The Love Interest">Love Interest</button>
+                    <button class="char-role-chip" data-role="The Informant">The Informant</button>
+                  </div>
+                </div>
+              </div>
+              <div class="char-role-card-footer">
+                <button class="btn btn-ghost btn-sm" id="char-role-cancel">Cancel</button>
+                <button class="btn btn-primary btn-sm" id="char-role-confirm">
+                  <i data-lucide="check"></i>&nbsp;Confirm &amp; Add to Scene
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.char-modal-body -->
+    </div><!-- /.char-modal -->
+  </div><!-- /.char-modal-overlay -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       WORLD SCENE MODAL
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="char-modal-overlay" id="scene-modal-overlay">
+    <div class="char-modal" id="scene-modal" role="dialog" aria-modal="true">
+
+      <!-- Header -->
+      <div class="char-modal-header">
+        <button class="char-modal-back hidden" id="scene-modal-back">
+          <i data-lucide="arrow-left"></i>
+        </button>
+        <div>
+          <div class="char-modal-title" id="scene-modal-title">World Scene</div>
+          <div class="char-modal-sub" id="scene-modal-sub">Create or select cinematic environments for your video.</div>
+        </div>
+        <div class="char-modal-actions">
+          <button class="icon-btn" title="Recently used"><i data-lucide="clock"></i></button>
+          <button class="icon-btn" title="Help"><i data-lucide="help-circle"></i></button>
+          <button class="icon-btn" id="scene-modal-close" title="Close"><i data-lucide="x"></i></button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="char-modal-body">
+
+        <!-- ── MAIN GRID ── -->
+        <div class="char-option-grid" id="scene-option-grid">
+
+          <div class="char-option-card" data-scene-view="generate"
+               style="--card-bg:url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="sparkles"></i></div>
+              <div class="char-option-heading">Generate Scene</div>
+              <div class="char-option-desc">Describe your world and AI will create cinematic environments instantly.</div>
+            </div>
+          </div>
+
+          <div class="char-option-card" data-scene-view="reference"
+               style="--card-bg:url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="image"></i></div>
+              <div class="char-option-heading">From Reference Image</div>
+              <div class="char-option-desc">Upload a photo or location reference and AI will match the environment.</div>
+            </div>
+          </div>
+
+          <div class="char-option-card" data-scene-view="library"
+               style="--card-bg:url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="layout-grid"></i></div>
+              <div class="char-option-heading">Scene Library</div>
+              <div class="char-option-desc">Browse and reuse your saved cinematic environments across projects.</div>
+            </div>
+          </div>
+
+          <div class="char-option-card" data-scene-view="presets"
+               style="--card-bg:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=600&q=80')">
+            <div class="char-option-card-inner">
+              <div class="char-option-icon"><i data-lucide="film"></i></div>
+              <div class="char-option-heading">Cinematic Presets</div>
+              <div class="char-option-desc">Handcrafted environments — Noir, Sci-Fi, Fantasy, Horror and more.</div>
+            </div>
+          </div>
+
+        </div><!-- /#scene-option-grid -->
+
+        <!-- ── VIEW A: GENERATE SCENE ── -->
+        <div class="char-view hidden" id="scene-view-generate">
+          <div class="char-view-2col">
+            <!-- Left: Prompt + Controls -->
+            <div class="char-view-col">
+              <div class="section-label">DESCRIBE THE ENVIRONMENT</div>
+              <textarea class="char-prompt-textarea" placeholder="Describe the world... e.g. A rain-soaked Tokyo alley at midnight, neon reflections on wet pavement, steam rising from grates, crowded but lonely."></textarea>
+
+              <div class="char-prompt-examples">
+                <span class="assist-chip" data-scene-prompt="A neon-lit cyberpunk street at night, rain, holograms.">Cyberpunk Night</span>
+                <span class="assist-chip" data-scene-prompt="A vast golden desert at sunset, ancient ruins in the distance.">Desert Ruins</span>
+                <span class="assist-chip" data-scene-prompt="A cold underground bunker, flickering lights, industrial steel.">Bunker</span>
+                <span class="assist-chip" data-scene-prompt="A misty ancient forest, tall trees, dappled light through fog.">Ancient Forest</span>
+              </div>
+
+              <div class="char-sections">
+                <div class="char-section-item open">
+                  <div class="char-section-header"><i data-lucide="map"></i><span>Environment</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-two-fields">
+                      <div class="char-control-field"><label>Type</label>
+                        <select class="ws-select"><option>Exterior</option><option>Interior</option></select></div>
+                      <div class="char-control-field"><label>Scale</label>
+                        <select class="ws-select"><option>Street Level</option><option>Room</option><option>Landscape</option><option>Cosmic</option></select></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="sun"></i><span>Time &amp; Weather</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-two-fields">
+                      <div class="char-control-field"><label>Time of Day</label>
+                        <select class="ws-select"><option>Night</option><option>Golden Hour</option><option>Midday</option><option>Dawn</option><option>Dusk</option></select></div>
+                      <div class="char-control-field"><label>Weather</label>
+                        <select class="ws-select"><option>Clear</option><option>Rain</option><option>Fog / Mist</option><option>Snow</option><option>Storm</option></select></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="char-section-item">
+                  <div class="char-section-header"><i data-lucide="palette"></i><span>Mood &amp; Style</span><i data-lucide="chevron-down" class="char-section-toggle"></i></div>
+                  <div class="char-section-body">
+                    <div class="char-two-fields">
+                      <div class="char-control-field"><label>Mood</label>
+                        <select class="ws-select"><option>Dark &amp; Tense</option><option>Serene</option><option>Mysterious</option><option>Epic &amp; Vast</option><option>Romantic</option><option>Gritty</option></select></div>
+                      <div class="char-control-field"><label>Visual Style</label>
+                        <select class="ws-select"><option>Photorealistic</option><option>Cinematic</option><option>Noir</option><option>Sci-Fi</option><option>Fantasy</option><option>Horror</option></select></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="char-ai-sliders">
+                <div class="char-slider-row"><span>Detail</span><input type="range" class="char-slider" min="0" max="100" value="75"/><span class="char-slider-val">75</span></div>
+                <div class="char-slider-row"><span>Atmosphere</span><input type="range" class="char-slider" min="0" max="100" value="85"/><span class="char-slider-val">85</span></div>
+                <div class="char-slider-row"><span>Realism</span><input type="range" class="char-slider" min="0" max="100" value="80"/><span class="char-slider-val">80</span></div>
+              </div>
+            </div>
+
+            <!-- Right: Preview -->
+            <div class="char-view-col char-preview-col">
+              <div class="section-label">AI PREVIEW</div>
+              <div class="char-ai-preview char-ai-preview-tall scene-preview-landscape">
+                <div class="char-shimmer"></div>
+                <div class="char-preview-badge">● READY</div>
+              </div>
+              <div class="char-variation-strip">
+                <div class="char-variation active"></div>
+                <div class="char-variation"></div>
+                <div class="char-variation"></div>
+                <div class="char-variation"></div>
+              </div>
+              <div class="char-view-footer" style="padding-top:16px;margin-top:auto;">
+                <button class="btn btn-ghost"><i data-lucide="save"></i>&nbsp;Save</button>
+                <button class="btn btn-primary" style="width:100%;"><i data-lucide="sparkles"></i>&nbsp;Generate Scene</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VIEW B: FROM REFERENCE ── -->
+        <div class="char-view hidden" id="scene-view-reference">
+          <div class="char-view-3col">
+            <div class="char-view-col char-upload-col">
+              <div class="section-label">REFERENCE IMAGES</div>
+              <div class="char-upload-zone" id="scene-upload-zone">
+                <input type="file" id="scene-file-input" accept="image/*" multiple class="hidden"/>
+                <i data-lucide="upload-cloud" style="width:32px;height:32px;opacity:0.4;"></i>
+                <p>Drag &amp; drop location photos</p>
+                <span>or</span>
+                <button class="btn btn-ghost btn-sm" id="scene-upload-browse">Browse Files</button>
+              </div>
+              <div class="char-upload-grid" id="scene-upload-grid"></div>
+              <div class="char-detect-tags" style="margin-top:8px;">
+                <span class="char-detect-tag active"><i data-lucide="map-pin"></i> Location Detected</span>
+                <span class="char-detect-tag"><i data-lucide="sun"></i> Lighting Extracted</span>
+                <span class="char-detect-tag"><i data-lucide="palette"></i> Palette Sampled</span>
+              </div>
+            </div>
+            <div class="char-view-col char-preview-col">
+              <div class="section-label">AI PREVIEW</div>
+              <div class="char-ai-preview scene-preview-landscape" style="flex:1;">
+                <div class="char-shimmer"></div>
+                <div class="char-preview-badge">● READY</div>
+              </div>
+            </div>
+            <div class="char-view-col char-controls-col">
+              <div class="section-label">STYLE CONTROLS</div>
+              <div class="char-control-field"><label>Environment Type</label><select class="ws-select"><option>Exterior</option><option>Interior</option></select></div>
+              <div class="char-control-field"><label>Time of Day</label><select class="ws-select"><option>Match Reference</option><option>Night</option><option>Golden Hour</option><option>Midday</option></select></div>
+              <div class="char-control-field"><label>Weather</label><select class="ws-select"><option>Match Reference</option><option>Rain</option><option>Clear</option><option>Fog</option></select></div>
+              <div class="char-control-field"><label>Style</label><select class="ws-select"><option>Photorealistic</option><option>Cinematic</option><option>Stylized</option></select></div>
+              <div class="char-control-field"><label>Style Strength</label><input type="range" class="char-slider" min="0" max="100" value="70"/><div class="char-slider-labels"><span>Loose</span><span>Strict</span></div></div>
+            </div>
+          </div>
+          <div class="char-view-footer">
+            <button class="btn btn-ghost"><i data-lucide="rotate-ccw"></i>&nbsp;Reset</button>
+            <div style="display:flex;gap:12px;">
+              <button class="btn btn-ghost"><i data-lucide="save"></i>&nbsp;Save</button>
+              <button class="btn btn-primary"><i data-lucide="sparkles"></i>&nbsp;Generate Scene</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VIEW C: SCENE LIBRARY ── -->
+        <div class="char-view hidden" id="scene-view-library">
+          <div class="char-library-toolbar">
+            <div class="char-library-search-wrap">
+              <i data-lucide="search" style="width:14px;height:14px;color:var(--ag-text-muted);"></i>
+              <input type="text" class="ws-input" id="scene-lib-search" placeholder="Search environments..." style="background:transparent;border:none;padding:0;font-size:13px;"/>
+            </div>
+            <div class="char-lib-filters">
+              <button class="char-lib-filter active" data-scene-filter="all">All</button>
+              <button class="char-lib-filter" data-scene-filter="exterior">Exterior</button>
+              <button class="char-lib-filter" data-scene-filter="interior">Interior</button>
+            </div>
+          </div>
+          <div class="scene-lib-grid" id="scene-lib-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- ── VIEW D: CINEMATIC PRESETS ── -->
+        <div class="char-view hidden" id="scene-view-presets">
+          <div class="scene-presets-header">
+            <p class="scene-presets-sub">Click any environment to instantly add it to your scene.</p>
+          </div>
+          <div class="scene-presets-grid" id="scene-presets-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div><!-- /.char-modal-body -->
+    </div><!-- /#scene-modal -->
+  </div><!-- /#scene-modal-overlay -->
+
+  <script type="module" src="/workspace.js"></script>
+</body>
+</html>

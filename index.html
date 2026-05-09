@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineIQ — 22-Language Creative AI Studio</title>
+  <meta name="description" content="The architecture of a complete creative AI studio — originate, develop and produce any content format, in any of 22 languages." />
+  <meta name="keywords" content="AI video, cinematic AI, video creation, CineIQ, AI studio, 22 languages" />
+  <meta property="og:title" content="CineIQ — Creative AI Studio" />
+  <meta property="og:description" content="Originate, develop and produce any content format, in any of 22 languages." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.min.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    /* ── Page Loader ─────────────────────────────── */
+    #page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-logo {
+      height: 44px;
+      width: auto;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: loader-logo-in 1s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+    }
+    @keyframes loader-logo-in {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .loader-bar-wrap {
+      width: 220px;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      overflow: hidden;
+      opacity: 0;
+      animation: loader-logo-in 0.7s ease 1s forwards;
+    }
+    .loader-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #C03820, #E06240);
+      border-radius: 99px;
+      animation: loader-fill 3.2s cubic-bezier(0.4,0,0.2,1) 1.2s forwards;
+    }
+    @keyframes loader-fill {
+      0%   { width: 0%; }
+      40%  { width: 45%; }
+      70%  { width: 72%; }
+      90%  { width: 88%; }
+      100% { width: 100%; }
+    }
+    .loader-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.28);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: loader-logo-in 0.7s ease 1.3s forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Page Loader ── -->
+  <div id="page-loader">
+    <img src="/cineiq.png" alt="CineIQ" class="loader-logo" />
+    <div class="loader-bar-wrap">
+      <div class="loader-bar-fill"></div>
+    </div>
+    <span class="loader-tagline">From Prompt to Picture</span>
+  </div>
+
+  <script>
+    (function () {
+      const loader = document.getElementById('page-loader');
+      if (sessionStorage.getItem('loaderShown')) {
+        // Already shown this session — hide instantly, no animation
+        if (loader) { loader.style.transition = 'none'; loader.classList.add('hidden'); }
+        return;
+      }
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          if (loader) loader.classList.add('hidden');
+          sessionStorage.setItem('loaderShown', '1');
+        }, 1800);
+      });
+    })();
+  </script>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- NAVIGATION                                 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <nav id="main-nav" class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" id="nav-logo">
+        <img src="/cineiq.png" alt="CineIQ" style="height:28px;width:auto;display:block;" />
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#ai-agents" class="nav-link">AI Agents</a>
+        <a href="#showcase" class="nav-link">Showcase</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/login.html" class="btn btn-ghost" id="btn-login">Log In</a>
+        <a href="/workspace.html" class="btn btn-primary" id="btn-signup">Start Creating Free</a>
+      </div>
+      <button class="nav-mobile-toggle" id="nav-mobile-toggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- HERO SECTION                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="hero" class="hero">
+    <div class="hero-bg-effects">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-grid-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Now in Public Beta</span>
+      </div>
+      <h1 class="hero-title">
+        From <span class="gradient-text">Prompt</span> to <span class="gradient-text">Picture.</span>
+      </h1>
+      <p class="hero-subtitle">
+        A complete creative AI studio — originate, develop and produce any content format, in any of 22 languages.
+      </p>
+      <div class="hero-prompt-box" id="hero-prompt-box">
+        <div class="prompt-glow"></div>
+        <div class="prompt-tabs">
+          <div class="prompt-tab active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            Music Video
+          </div>
+          <div class="prompt-tab">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            YouTube Pilot
+          </div>
+          <div class="prompt-tab">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+            Long-form Show
+          </div>
+          <div class="prompt-tab">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+            Feature Film
+          </div>
+        </div>
+        <div class="prompt-inner">
+          <div class="prompt-textarea-wrap">
+            <div class="prompt-typing" id="prompt-typing" contenteditable="true" spellcheck="false" autocomplete="off"></div>
+          </div>
+          <div class="prompt-actions-bottom">
+            <div class="prompt-actions-left">
+              <input type="file" id="prompt-file-upload" style="display: none;" accept="image/*,video/*,application/pdf" />
+              <button class="action-icon-btn" aria-label="Attachment" id="btn-attach"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+              <button class="action-icon-btn" aria-label="Library"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></button>
+              <button class="action-dropdown-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ag-accent-secondary)"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                CineIQ Phase 3
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="prompt-actions-right">
+
+              <button class="action-icon-btn" aria-label="Settings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button>
+              <button class="action-icon-btn" aria-label="Voice input"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button>
+              <button class="btn-generate-arrow" id="btn-generate" aria-label="Generate Video">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="prompt-suggestions">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span>Try these formats:</span>
+        <button class="suggestion-btn" data-story="billionaire">The Billionaire's Fake Wife</button>
+        <button class="suggestion-btn" data-story="husband">My Husband Has Another Family</button>
+        <button class="suggestion-btn" data-story="maid">The Maid Everyone Hated Is the Real Princess</button>
+      </div>
+
+    </div>
+    <div class="hero-scroll-indicator">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- LIVE DEMO STRIP                            -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="demo-strip" class="demo-strip">
+    <div class="ticker-track" id="ticker-track">
+      <!-- Dynamically populated by JS -->
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- HOW IT WORKS                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Simple as 1-2-3</span>
+        <h2 class="section-title">How It <span class="gradient-text">Works</span></h2>
+        <p class="section-desc">Professional cinematic videos in three effortless steps.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card" data-step="01">
+          <div class="step-number">01</div>
+          <div class="step-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3 class="step-title">Write Your Prompt</h3>
+          <p class="step-desc">Describe your vision in plain language. A sentence, a paragraph, or a full creative brief — our AI understands it all.</p>
+        </div>
+        <div class="step-connector">
+          <svg width="48" height="24" viewBox="0 0 48 24"><path d="M0 12h40M35 6l6 6-6 6" stroke="url(#connGrad)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="connGrad" x1="0" y1="12" x2="48" y2="12"><stop offset="0%" stop-color="#C03820"/><stop offset="100%" stop-color="#E06240"/></linearGradient></defs></svg>
+        </div>
+        <div class="step-card" data-step="02">
+          <div class="step-number">02</div>
+          <div class="step-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M16.36 16.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M16.36 7.64l1.42-1.42"/></svg>
+          </div>
+          <h3 class="step-title">AI Agents Activate</h3>
+          <p class="step-desc">10 specialized AI agents — Director, Cinematographer, Script, Voice, Music — collaborate as your digital crew in real-time.</p>
+        </div>
+        <div class="step-connector">
+          <svg width="48" height="24" viewBox="0 0 48 24"><path d="M0 12h40M35 6l6 6-6 6" stroke="url(#connGrad2)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="connGrad2" x1="0" y1="12" x2="48" y2="12"><stop offset="0%" stop-color="#C03820"/><stop offset="100%" stop-color="#E06240"/></linearGradient></defs></svg>
+        </div>
+        <div class="step-card" data-step="03">
+          <div class="step-number">03</div>
+          <div class="step-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          </div>
+          <h3 class="step-title">Receive Cinema-Quality Video</h3>
+          <p class="step-desc">Preview, refine, and export your fully produced, scored, voiced, and edited cinematic video — ready to publish anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- AI AGENTS GRID                             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="ai-agents" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Your Digital Crew</span>
+        <h2 class="section-title">Meet the <span class="gradient-text">AI Agents</span></h2>
+        <p class="section-desc">10 specialized AI agents work in parallel as your full production crew.</p>
+      </div>
+      <div class="agents-grid" id="agents-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- QUALITY SHOWCASE                           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="showcase" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">See the Quality</span>
+        <h2 class="section-title">Prompt to <span class="gradient-text">Masterpiece</span></h2>
+        <p class="section-desc">Real prompts. Real outputs. No cherry-picking.</p>
+      </div>
+      <div class="showcase-grid" id="showcase-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- COMPARISON TABLE                           -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="comparison" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Why CineIQ</span>
+        <h2 class="section-title">Platform <span class="gradient-text">Comparison</span></h2>
+        <p class="section-desc">See how CineIQ stacks up against the competition.</p>
+      </div>
+      <div class="comparison-table-wrap">
+        <table class="comparison-table" id="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight-col">CineIQ</th>
+              <th>InVideo</th>
+              <th>Runway</th>
+              <th>Krea</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AI Agent Orchestra</td>
+              <td class="highlight-col"><span class="check">✓</span> 10 Agents</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>Prompt-to-Full Video</td>
+              <td class="highlight-col"><span class="check">✓</span></td>
+              <td><span class="partial">~</span> Limited</td>
+              <td><span class="cross">✗</span> Clips only</td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>Character Consistency</td>
+              <td class="highlight-col"><span class="check">✓</span> Built-in</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="partial">~</span> Manual</td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>AI Voice + Lip Sync</td>
+              <td class="highlight-col"><span class="check">✓</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>AI Music Scoring</td>
+              <td class="highlight-col"><span class="check">✓</span> Original</td>
+              <td><span class="partial">~</span> Stock</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>Timeline Editor</td>
+              <td class="highlight-col"><span class="check">✓</span> Multi-track</td>
+              <td><span class="check">✓</span> Basic</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>Max Resolution</td>
+              <td class="highlight-col"><span class="check">✓</span> 8K</td>
+              <td>4K</td>
+              <td>4K</td>
+              <td>1080p</td>
+            </tr>
+            <tr>
+              <td>Real-time Collaboration</td>
+              <td class="highlight-col"><span class="check">✓</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TESTIMONIALS                               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="testimonials" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Loved by Creators</span>
+        <h2 class="section-title">What Creators <span class="gradient-text">Say</span></h2>
+      </div>
+      <div class="testimonials-grid" id="testimonials-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- PRICING                                    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="pricing" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Simple Pricing</span>
+        <h2 class="section-title">Choose Your <span class="gradient-text">Plan</span></h2>
+        <p class="section-desc">Start free. Upgrade as you grow. No surprises.</p>
+      </div>
+      <div class="pricing-grid" id="pricing-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- FINAL CTA                                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <section id="final-cta" class="final-cta">
+    <div class="cta-bg-effects">
+      <div class="cta-orb cta-orb-1"></div>
+      <div class="cta-orb cta-orb-2"></div>
+    </div>
+    <div class="container">
+      <h2 class="cta-title">Ready to defy gravity?</h2>
+      <p class="cta-subtitle">Join 500,000+ creators making cinematic videos with AI.</p>
+      <a href="/workspace.html" class="btn btn-primary btn-xl" id="btn-final-cta">Start Creating Free</a>
+      <p class="cta-note">No credit card required · 3 free videos · Cancel anytime</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- FOOTER                                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <img src="/cineiq.png" alt="CineIQ" style="height:24px;width:auto;display:block;" />
+          </div>
+          <p class="footer-tagline">From Prompt to Picture.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#">Templates</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Documentation</a>
+          <a href="#">Blog</a>
+          <a href="#">Tutorials</a>
+          <a href="#">Community</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 CineIQ. All rights reserved. | STRICTLY CONFIDENTIAL</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter/X">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.546 12 3.546 12 3.546s-7.505 0-9.377.504A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.504 9.376.504 9.376.504s7.505 0 9.377-.504a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="5"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>

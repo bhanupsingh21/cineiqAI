@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | CineIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #000;
+      font-family: var(--font);
+      overflow: hidden;
+    }
+
+    /* ── LEFT PANEL ── */
+    .login-panel {
+      width: 42%;
+      min-width: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 48px;
+      background: #000;
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-panel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background: var(--border);
+    }
+
+    .login-inner {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .login-logo {
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .login-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .login-logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      color: #fff;
+      font-family: var(--font-display, 'DM Sans', sans-serif);
+    }
+
+    .login-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: -0.03em;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      width: 100%;
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-3);
+    }
+
+    .form-input:focus {
+      border-color: rgba(208,72,48,0.6);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 22px;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-login:hover {
+      background: rgba(255,255,255,0.88);
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      color: var(--text-3);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      padding: 0 14px;
+    }
+
+    .btn-social {
+      width: 100%;
+      background: transparent;
+      color: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      transition: background 0.2s, border-color 0.2s;
+      font-family: var(--font);
+    }
+
+    .btn-social:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--border-hover);
+    }
+
+    .btn-social svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+
+    .login-footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--text-3);
+      line-height: 1.6;
+    }
+
+    .login-footer a {
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .login-footer a:hover {
+      color: #fff;
+    }
+
+    .signup-link {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    .signup-link a {
+      color: #fff;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      transition: border-color 0.2s;
+    }
+
+    .signup-link a:hover {
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    /* ── RIGHT PANEL ── */
+    .demo-panel {
+      flex: 1;
+      position: relative;
+      background: #080808;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 48px 56px;
+    }
+
+    /* Ambient glow effects */
+    .demo-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .demo-orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #D04830, transparent);
+      top: -100px;
+      right: -100px;
+    }
+
+    .demo-orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #C03820, transparent);
+      bottom: -80px;
+      left: 10%;
+    }
+
+    /* Grid overlay */
+    .demo-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+    }
+
+    .demo-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text-2);
+      margin-bottom: 20px;
+      letter-spacing: 0.01em;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green, #16C784);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green, #16C784);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(22,199,132,0.4); }
+      70%  { box-shadow: 0 0 0 7px rgba(22,199,132,0); }
+      100% { box-shadow: 0 0 0 0 rgba(22,199,132,0); }
+    }
+
+    .demo-heading {
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      font-family: var(--font-display, 'DM Sans', sans-serif);
+    }
+
+    .demo-heading span {
+      color: #FFFFFF;
+    }
+
+    .demo-desc {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin-bottom: 28px;
+      max-width: 460px;
+    }
+
+    /* Video container */
+    .video-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0d0d0d;
+      position: relative;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    .video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Placeholder shown when no video src */
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #0e0e14 0%, #0a0a10 100%);
+    }
+
+    .play-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .play-btn:hover {
+      background: rgba(255,255,255,0.18);
+      transform: scale(1.06);
+    }
+
+    .play-btn svg {
+      width: 22px;
+      height: 22px;
+      color: #fff;
+      margin-left: 3px;
+    }
+
+    .video-placeholder-text {
+      font-size: 13px;
+      color: var(--text-3);
+      letter-spacing: 0.01em;
+    }
+
+    /* Animated UI mockup inside the placeholder */
+    .mockup-bars {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      gap: 8px;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .mockup-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #C03820, #E06240);
+      animation: shimmer 2.4s ease-in-out infinite;
+    }
+
+    .mockup-bar:nth-child(1) { width: 60%; animation-delay: 0s; }
+    .mockup-bar:nth-child(2) { width: 85%; animation-delay: 0.15s; }
+    .mockup-bar:nth-child(3) { width: 40%; animation-delay: 0.3s; }
+    .mockup-bar:nth-child(4) { width: 70%; animation-delay: 0.45s; }
+    .mockup-bar:nth-child(5) { width: 55%; animation-delay: 0.6s; }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 0.9; }
+    }
+
+    /* Social proof row */
+    .demo-social-proof {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      background: var(--bg-3);
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-2);
+      overflow: hidden;
+    }
+
+    .avatar:first-child { margin-left: 0; }
+
+    .avatar-colors {
+      background: linear-gradient(135deg, #C03820, #E06240);
+      color: #fff;
+    }
+
+    .avatar-green {
+      background: linear-gradient(135deg, #16C784, #0fa86e);
+      color: #fff;
+    }
+
+    .avatar-blue {
+      background: linear-gradient(135deg, #D04830, #E06240);
+      color: #fff;
+    }
+
+    .social-proof-text {
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    .social-proof-text strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      body { flex-direction: column; overflow: auto; }
+
+      .login-panel {
+        width: 100%;
+        min-width: unset;
+        padding: 48px 28px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .login-panel::after { display: none; }
+
+      .demo-panel {
+        padding: 40px 28px;
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LEFT: Login Form ── -->
+  <div class="login-panel">
+    <div class="login-inner">
+
+      <a href="/index.html" class="login-logo">
+        <img src="/cineiq.png" alt="CineIQ" style="height:28px;width:auto;display:block;" />
+      </a>
+
+      <h1 class="login-title">Welcome back</h1>
+      <p class="login-subtitle">Enter your email to sign in to your account</p>
+
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" placeholder="name@company.com" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" placeholder="••••••••" />
+      </div>
+
+      <a href="/workspace.html" class="btn-login">
+        Continue with Email
+      </a>
+
+      <div class="divider"><span>or</span></div>
+
+      <button class="btn-social">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <button class="btn-social">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.45-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+        </svg>
+        Continue with GitHub
+      </button>
+
+      <div class="login-footer">
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </div>
+
+      <div class="signup-link">
+        Don't have an account? <a href="#">Sign up free</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── RIGHT: Demo Panel ── -->
+  <div class="demo-panel">
+    <div class="demo-orb demo-orb-1"></div>
+    <div class="demo-orb demo-orb-2"></div>
+    <div class="demo-grid"></div>
+
+    <div class="demo-content">
+
+      <div class="demo-badge">
+        <span class="badge-dot"></span>
+        Live product demo
+      </div>
+
+      <h2 class="demo-heading">
+        Turn any prompt into<br/>
+        a <span>cinematic experience</span>
+      </h2>
+
+      <p class="demo-desc">
+        CineIQ uses multi-agent AI to generate scripts, storyboards, voiceovers, and complete videos — all from a single sentence.
+      </p>
+
+      <div class="video-wrap">
+        <!-- Replace src with your actual demo video path -->
+        <video id="demoVideo" autoplay muted loop playsinline src="">
+          Your browser does not support HTML5 video.
+        </video>
+
+        <!-- Shown only when video src is empty / not loaded -->
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="mockup-bars">
+            <div class="mockup-bar"></div>
+            <div class="mockup-bar"></div>
+            <div class="mockup-bar"></div>
+            <div class="mockup-bar"></div>
+            <div class="mockup-bar"></div>
+          </div>
+          <button class="play-btn" onclick="document.getElementById('demoVideo').play()">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <span class="video-placeholder-text">Demo video coming soon</span>
+        </div>
+      </div>
+
+      <div class="demo-social-proof">
+        <div class="avatars">
+          <div class="avatar avatar-colors">B</div>
+          <div class="avatar avatar-green">S</div>
+          <div class="avatar avatar-blue">A</div>
+          <div class="avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;">K</div>
+        </div>
+        <span class="social-proof-text">Trusted by <strong>2,400+</strong> creators &amp; studios</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Hide placeholder if video has a real src and loads
+    const video = document.getElementById('demoVideo');
+    const placeholder = document.getElementById('videoPlaceholder');
+
+    if (video.src && video.src !== window.location.href) {
+      video.addEventListener('canplay', () => {
+        placeholder.style.display = 'none';
+      });
+    }
+  </script>
+</body>
+</html>
